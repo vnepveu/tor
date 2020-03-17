@@ -4154,7 +4154,8 @@ dirvote_dirreq_get_status_vote(const char *url, smartlist_t *items,
 
 /** Get the best estimate of a router's bandwidth for dirauth purposes,
  * preferring measured to advertised values if available. */
-MOCK_IMPL(uint32_t,dirserv_get_bandwidth_for_router_kb,(const routerinfo_t *ri))
+MOCK_IMPL(uint32_t,dirserv_get_bandwidth_for_router_kb,
+        (const routerinfo_t *ri))
 {
   uint32_t bw_kb = 0;
   /*
