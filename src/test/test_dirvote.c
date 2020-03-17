@@ -68,13 +68,12 @@ mock_dirserv_get_bw(const routerinfo_t *ri)
 static void
 test_dirvote_compare_routerinfo_by_ip_and_bw_(void *arg)
 {
+  (void) arg;
   MOCK(router_digest_is_trusted_dir_type, mock_router_digest_is_trusted);
   MOCK(node_get_by_id, mock_node_get_by_id);
   MOCK(dirserv_get_bandwidth_for_router_kb, mock_dirserv_get_bw);
 
   // Initialize the routerinfo
-  printf("\n");
-  (void) arg;
   routerinfo_t *first = tor_malloc(sizeof(routerinfo_t));
   routerinfo_t *second = tor_malloc(sizeof(routerinfo_t));
 
@@ -159,10 +158,20 @@ test_dirvote_compare_routerinfo_by_ip_and_bw_(void *arg)
   return;
 }
 
+static void
+test_dirvote_get_possible_sybil_list(void *arg)
+{
+  (void) arg;
+  printf("Hello from get_possible sybil");
+  return;
+
+}
+
 #define NODE(name, flags) \
   { #name, test_dirvote_##name, (flags), NULL, NULL}
 
 struct testcase_t dirvote_tests[] = {
         NODE(compare_routerinfo_by_ip_and_bw_, TT_FORK),
+        NODE(get_possible_sybil_list, TT_FORK),
         END_OF_TESTCASES
 };

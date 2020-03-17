@@ -4189,7 +4189,7 @@ MOCK_IMPL(uint32_t,dirserv_get_bandwidth_for_router_kb,
  * non-authority; a running router is more useful than a non-running router;
  * and a router with more bandwidth is more useful than one with less.)
  **/
-int
+STATIC int
 compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
 {
   routerinfo_t *first = *(routerinfo_t **)a, *second = *(routerinfo_t **)b;
@@ -4265,7 +4265,7 @@ compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
 /** Given a list of routerinfo_t in <b>routers</b>, return a new digestmap_t
  * whose keys are the identity digests of those routers that we're going to
  * exclude for Sybil-like appearance. */
-static digestmap_t *
+STATIC digestmap_t *
 get_possible_sybil_list(const smartlist_t *routers)
 {
   const dirauth_options_t *options = dirauth_get_options();
