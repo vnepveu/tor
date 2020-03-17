@@ -4154,8 +4154,7 @@ dirvote_dirreq_get_status_vote(const char *url, smartlist_t *items,
 
 /** Get the best estimate of a router's bandwidth for dirauth purposes,
  * preferring measured to advertised values if available. */
-static uint32_t
-dirserv_get_bandwidth_for_router_kb(const routerinfo_t *ri)
+MOCK_IMPL(uint32_t,dirserv_get_bandwidth_for_router_kb,(const routerinfo_t *ri))
 {
   uint32_t bw_kb = 0;
   /*
@@ -4229,7 +4228,6 @@ compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
   /* Potentially, this next bit could cause k n lg n memeq calls.  But in
    * reality, we will almost never get here, since addresses will usually be
    * different. */
-
   first_is_auth =
     router_digest_is_trusted_dir(first->cache_info.identity_digest);
   second_is_auth =
@@ -4244,7 +4242,6 @@ compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
   node_second = node_get_by_id(second->cache_info.identity_digest);
   first_is_running = node_first && node_first->is_running;
   second_is_running = node_second && node_second->is_running;
-
   if (first_is_running && !second_is_running)
     return -1;
   else if (!first_is_running && second_is_running)
