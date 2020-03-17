@@ -4196,18 +4196,17 @@ compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
   uint32_t bw_kb_first, bw_kb_second;
   const node_t *node_first, *node_second;
   int first_is_running, second_is_running;
-  printf("%d\n", 4);
   tor_addr_t *first_ipv6 = &(first->ipv6_addr);
   tor_addr_t *second_ipv6 = &(second->ipv6_addr);
   sa_family_t first_family, second_family;
-
-  /* the ipv6 router should appear before the ipv4 router
-   * because it is considered a better router */
   first_family = tor_addr_family(first_ipv6);
   second_family = tor_addr_family(second_ipv6);
+  /* the ipv6 router should appear before the ipv4 router
+   * because it is considered a better router */
   if (first_family != second_family)
     return first_family == AF_INET6 ? -1 : 1;
   if (first_family == AF_INET6) {
+    // both are ipv6, return -1 if first has smaller address than second
     const uint8_t *first_address = tor_addr_to_in6_addr8(first_ipv6);
     const uint8_t *second_address = tor_addr_to_in6_addr8(second_ipv6);
     for (int i = 0; i < 16; i++) {
@@ -4216,9 +4215,7 @@ compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
     }
     return 1;
     } else {
-      /* otherwise, both addresses are IPv4, fallback to previous behavior */
-      /* we return -1 if first should appear before second... that is,
-       * if first is a better router. */
+    // both are ipv4, return -1 if first has smaller address than second
       if (first->addr < second->addr)
         return -1;
       else if (first->addr > second->addr)
