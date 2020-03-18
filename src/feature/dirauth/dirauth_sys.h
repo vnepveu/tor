@@ -8,12 +8,13 @@
  * @file dirauth_sys.h
  * @brief Header for dirauth_sys.c
  **/
+#include "lib/testsupport/testsupport.h"
 
 #ifndef DIRAUTH_SYS_H
 #define DIRAUTH_SYS_H
 
 struct dirauth_options_t;
-const struct dirauth_options_t *dirauth_get_options(void);
+MOCK_DECL(const struct dirauth_options_t *,dirauth_get_options,(void));
 
 extern const struct subsys_fns_t sys_dirauth;
 

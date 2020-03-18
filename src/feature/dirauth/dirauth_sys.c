@@ -43,8 +43,8 @@ subsys_dirauth_shutdown(void)
   global_dirauth_options = NULL;
 }
 
-const dirauth_options_t *
-dirauth_get_options(void)
+MOCK_IMPL(const dirauth_options_t *,
+dirauth_get_options,(void))
 {
   tor_assert(global_dirauth_options);
   return global_dirauth_options;
