@@ -233,7 +233,8 @@ int networkstatus_add_detached_signatures(networkstatus_t *target,
                                           int severity,
                                           const char **msg_out);
 STATIC
-int compare_routerinfo_by_ip_and_bw_(const void **a, const void **b);
+MOCK_DECL(int,compare_routerinfo_by_ip_and_bw_,
+        (const void **a, const void **b));
 
 STATIC
 digestmap_t * get_possible_sybil_list(const smartlist_t *routers);

@@ -4190,8 +4190,9 @@ MOCK_IMPL(uint32_t,dirserv_get_bandwidth_for_router_kb,
  * non-authority; a running router is more useful than a non-running router;
  * and a router with more bandwidth is more useful than one with less.)
  **/
-STATIC int
-compare_routerinfo_by_ip_and_bw_(const void **a, const void **b)
+STATIC
+MOCK_IMPL(int, compare_routerinfo_by_ip_and_bw_,
+        (const void **a, const void **b))
 {
   routerinfo_t *first = *(routerinfo_t **)a, *second = *(routerinfo_t **)b;
   int first_is_auth, second_is_auth;
