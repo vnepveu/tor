@@ -6,6 +6,7 @@
 #define DIRVOTE_PRIVATE
 
 #include <netinet/in.h>
+#include <src/lib/malloc/malloc.h>
 #include "core/or/or.h"
 #include "app/config/config.h"
 #include "core/or/policies.h"
@@ -4271,8 +4272,6 @@ get_possible_sybil_list(const smartlist_t *routers)
   const dirauth_options_t *options = dirauth_get_options();
   digestmap_t *omit_as_sybil;
   smartlist_t *routers_by_ip = smartlist_new();
-  uint32_t last_addr;
-  int addr_count;
   /* Allow at most this number of Tor servers on a single IP address, ... */
   int max_with_same_addr = options->AuthDirMaxServersPerAddr;
   if (max_with_same_addr <= 0)
@@ -4282,18 +4281,38 @@ get_possible_sybil_list(const smartlist_t *routers)
   smartlist_sort(routers_by_ip, compare_routerinfo_by_ip_and_bw_);
   omit_as_sybil = digestmap_new();
 
-  last_addr = 0;
-  addr_count = 0;
+  sa_family_t * current_family = tor_malloc(sizeof(sa_family_t));
+  int ipv6_comparison = 0;
+  uint32_t last_ipv4_addr = 0;
+  tor_addr_t *last_ipv6_addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *current_ipv6_addr = tor_malloc(sizeof(tor_addr_t));
+  int addr_count_ipv4 = 0;
+  int addr_count_ipv6 = 0;
   SMARTLIST_FOREACH_BEGIN(routers_by_ip, routerinfo_t *, ri) {
-    if (last_addr != ri->addr) {
-      last_addr = ri->addr;
-      addr_count = 1;
-    } else if (++addr_count > max_with_same_addr) {
-      digestmap_set(omit_as_sybil, ri->cache_info.identity_digest, ri);
+    *current_ipv6_addr = ri->ipv6_addr;
+    *current_family = tor_addr_family(current_ipv6_addr);
+    if (*current_family == AF_INET6) {
+      ipv6_comparison = tor_addr_compare(last_ipv6_addr,
+              current_ipv6_addr, CMP_EXACT);
+      if (ipv6_comparison != 0) {
+        memcpy(last_ipv6_addr, current_ipv6_addr, sizeof(tor_addr_t));
+        addr_count_ipv6 = 1;
+      } else if (++addr_count_ipv6 > max_with_same_addr) {
+        digestmap_set(omit_as_sybil, ri->cache_info.identity_digest, ri);
+      }
+    } else {
+      if (last_ipv4_addr != ri->addr) {
+        last_ipv4_addr = ri->addr;
+        addr_count_ipv4 = 1;
+      } else if (++addr_count_ipv4 > max_with_same_addr) {
+        digestmap_set(omit_as_sybil, ri->cache_info.identity_digest, ri);
+      }
     }
   } SMARTLIST_FOREACH_END(ri);
-
   smartlist_free(routers_by_ip);
+  tor_free(last_ipv6_addr);
+  tor_free(current_ipv6_addr);
+  tor_free(current_family);
   return omit_as_sybil;
 }
 
