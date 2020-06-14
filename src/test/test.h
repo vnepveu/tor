@@ -122,7 +122,6 @@ extern struct testcase_t crypto_rng_tests[];
 extern struct testcase_t crypto_tests[];
 extern struct testcase_t dir_handle_get_tests[];
 extern struct testcase_t dir_tests[];
-extern struct testcase_t dirvote_tests[];
 extern struct testcase_t dispatch_tests[];
 extern struct testcase_t dns_tests[];
 extern struct testcase_t dos_tests[];
@@ -200,7 +199,7 @@ extern struct testcase_t util_tests[];
 extern struct testcase_t voting_flags_tests[];
 extern struct testcase_t voting_schedule_tests[];
 extern struct testcase_t x509_tests[];
-
+extern struct testcase_t dirvote_tests_array[];
 extern struct testcase_t slow_crypto_tests[];
 extern struct testcase_t slow_process_tests[];
 extern struct testcase_t slow_ptr_tests[];
